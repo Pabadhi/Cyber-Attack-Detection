@@ -1,6 +1,6 @@
 from detection.config import DEVICE_INFO, MODE_POWER_RANGES, ROLES
 from detection.context import is_time_allowed, is_business_hours
-from detection.logger import log_event_to_json
+from detection.logger_rate import log_event_to_json
 
 import time
 from collections import deque, defaultdict

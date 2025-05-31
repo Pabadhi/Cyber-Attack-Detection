@@ -2,7 +2,7 @@ import json
 import os
 import datetime
 
-LOG_FILE = "suspicious_events.json"
+LOG_FILE = "suspicious_rate_events.json"
 
 def log_event_to_json(event_type, device_id, value, avg, message):
     print(f"Logging event: {event_type}, Device ID: {device_id}, Value: {value}, Avg: {avg}, Message: {message}")

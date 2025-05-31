@@ -78,5 +78,149 @@
         "value": "N/A",
         "average": "N/A",
         "message": "User 'user01' logged in from two distant locations 1.1.1.1 \u2192 2.2.2.2 (4139.1 km apart) in 30.0s"
+    },
+    {
+        "timestamp": "2025-05-31T22:34:50.097237",
+        "event_type": "invalid_reading",
+        "device_id": "heater01",
+        "value": 0,
+        "average": 0,
+        "message": "Invalid power reading"
+    },
+    {
+        "timestamp": "2025-05-31T22:34:50.099235",
+        "event_type": "invalid_reading",
+        "device_id": "heater01",
+        "value": -10,
+        "average": 0,
+        "message": "Invalid power reading"
+    },
+    {
+        "timestamp": "2025-05-31T22:34:50.120237",
+        "event_type": "power_spike",
+        "device_id": "heater01",
+        "value": 2000,
+        "average": 107.6,
+        "message": "Significant spike; Outside mode range (100, 1500); 1 active sessions"
+    },
+    {
+        "timestamp": "2025-05-31T22:34:50.147237",
+        "event_type": "power_spike",
+        "device_id": "heater01",
+        "value": 2500,
+        "average": 107.6,
+        "message": "Significant spike; Exceeds max_expected (2000); Outside mode range (1500, 2200); 1 active sessions"
+    },
+    {
+        "timestamp": "2025-05-31T22:34:50.174236",
+        "event_type": "power_spike",
+        "device_id": "heater01",
+        "value": 1400,
+        "average": 107.6,
+        "message": "Significant spike; Outside mode range (0, 100); 1 active sessions"
+    },
+    {
+        "timestamp": "2025-05-31T03:34:50.199238",
+        "event_type": "power_spike",
+        "device_id": "heater01",
+        "value": 2000,
+        "average": 107.6,
+        "message": "Significant spike; Outside mode range (100, 1500); 1 active sessions"
+    },
+    {
+        "timestamp": "2025-05-31T22:42:05.419777",
+        "event_type": "invalid_reading",
+        "device_id": "heater01",
+        "value": 0,
+        "average": 0,
+        "message": "Invalid power reading"
+    },
+    {
+        "timestamp": "2025-05-31T22:42:05.422707",
+        "event_type": "invalid_reading",
+        "device_id": "heater01",
+        "value": -10,
+        "average": 0,
+        "message": "Invalid power reading"
+    },
+    {
+        "timestamp": "2025-05-31T22:42:05.434702",
+        "event_type": "power_spike",
+        "device_id": "heater01",
+        "value": 2000,
+        "average": 107.6,
+        "message": "Significant spike; Outside mode range (100, 1500); 1 active sessions"
+    },
+    {
+        "timestamp": "2025-05-31T22:42:05.450541",
+        "event_type": "power_spike",
+        "device_id": "heater01",
+        "value": 2500,
+        "average": 107.6,
+        "message": "Significant spike; Exceeds max_expected (2000); Outside mode range (1500, 2200); 1 active sessions"
+    },
+    {
+        "timestamp": "2025-05-31T22:42:05.463682",
+        "event_type": "power_spike",
+        "device_id": "heater01",
+        "value": 1400,
+        "average": 107.6,
+        "message": "Significant spike; Outside mode range (0, 100); 1 active sessions"
+    },
+    {
+        "timestamp": "2025-05-31T03:42:05.476419",
+        "event_type": "power_spike",
+        "device_id": "heater01",
+        "value": 2000,
+        "average": 107.6,
+        "message": "Significant spike; Outside mode range (100, 1500); 1 active sessions"
+    },
+    {
+        "timestamp": "2025-05-31T22:44:58.610073",
+        "event_type": "invalid_reading",
+        "device_id": "heater01",
+        "value": 0,
+        "average": 0,
+        "message": "Invalid power reading"
+    },
+    {
+        "timestamp": "2025-05-31T22:44:58.612968",
+        "event_type": "invalid_reading",
+        "device_id": "heater01",
+        "value": -10,
+        "average": 0,
+        "message": "Invalid power reading"
+    },
+    {
+        "timestamp": "2025-05-31T22:44:58.625964",
+        "event_type": "power_spike",
+        "device_id": "heater01",
+        "value": 2000,
+        "average": 107.6,
+        "message": "Significant spike; Outside mode range (100, 1500); 1 active sessions"
+    },
+    {
+        "timestamp": "2025-05-31T22:44:58.641982",
+        "event_type": "power_spike",
+        "device_id": "heater01",
+        "value": 2500,
+        "average": 107.6,
+        "message": "Significant spike; Exceeds max_expected (2000); Outside mode range (1500, 2200); 1 active sessions"
+    },
+    {
+        "timestamp": "2025-05-31T22:44:58.655964",
+        "event_type": "power_spike",
+        "device_id": "heater01",
+        "value": 1400,
+        "average": 107.6,
+        "message": "Significant spike; Outside mode range (0, 100); 1 active sessions"
+    },
+    {
+        "timestamp": "2025-05-31T03:44:58.668967",
+        "event_type": "power_spike",
+        "device_id": "heater01",
+        "value": 2000,
+        "average": 107.6,
+        "message": "Significant spike; Outside mode range (100, 1500); 1 active sessions"
     }
 ]

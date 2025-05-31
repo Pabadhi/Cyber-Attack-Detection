@@ -41,7 +41,17 @@ def test_location_jump_flagged(monkeypatch):
     monkeypatch.setattr(loc_jump, "datetime", fake_datetime)
 
     logs = []
-    monkeypatch.setattr(loc_jump, "log_event_to_json", lambda **kwargs: logs.append(kwargs))
+    monkeypatch.setattr(loc_jump, "jump_logger", lambda user_id, last_ip, ip_address, distance_km, time_diff: logs.append({
+    "event_type": "location_jump",
+    "user_id": user_id,
+    "from": last_ip,
+    "to": ip_address,
+    "distance_km": distance_km,
+    "time_diff": time_diff,
+    "message": f"User '{user_id}' jumped from {last_ip} to {ip_address}"
+    }))
+
+
 
     loc_jump.jump_detection("user01", "2.2.2.2")
 
@@ -69,7 +79,7 @@ def test_location_jump_not_flagged_due_to_time(monkeypatch):
     datetime.datetime.now = classmethod(lambda cls: base_time + datetime.timedelta(seconds=120))
 
     logs = []
-    monkeypatch.setattr(loc_jump, "log_event_to_json", lambda **kwargs: logs.append(kwargs))
+    monkeypatch.setattr(loc_jump, "jump_logger", lambda **kwargs: logs.append(kwargs))
 
     loc_jump.jump_detection("user02", "2.2.2.2")
 
@@ -94,10 +104,47 @@ def test_location_jump_not_flagged_due_to_distance(monkeypatch):
     datetime.datetime.now = classmethod(lambda cls: base_time + datetime.timedelta(seconds=30))
 
     logs = []
-    monkeypatch.setattr(loc_jump, "log_event_to_json", lambda **kwargs: logs.append(kwargs))
+    monkeypatch.setattr(loc_jump, "jump_logger", lambda **kwargs: logs.append(kwargs))
 
     loc_jump.jump_detection("user03", "1.1.1.2")
 
+    assert len(logs) == 0
+
+
+def test_location_jump_not_flagged_due_to_vpn(monkeypatch):
+    coords_map = {
+        "91.121.12.34": (48.8566, 2.3522),       # Paris (VPN)
+        "2.2.2.2": (40.7128, -74.0060),          # New York
+    }
+    monkeypatch.setattr(loc_jump, "get_coords", lambda ip: coords_map[ip])
+
+    # Mock known VPN check to match one IP
+    monkeypatch.setattr(loc_jump, "is_known_vpn", lambda ip: ip == "91.121.12.34")
+
+    # Setup mock time (30 seconds apart)
+    base_time = datetime.datetime(2025, 5, 30, 12, 0, 0)
+
+    # Mock time for first login
+    monkeypatch.setattr(loc_jump, "datetime", types.SimpleNamespace(
+        datetime=type("MockDateTime", (datetime.datetime,), {
+            "now": classmethod(lambda cls: base_time)
+        })
+    ))
+    loc_jump.jump_detection("user04", "91.121.12.34")
+
+    # Mock time for second login 30s later
+    monkeypatch.setattr(loc_jump, "datetime", types.SimpleNamespace(
+        datetime=type("MockDateTimeLater", (datetime.datetime,), {
+            "now": classmethod(lambda cls: base_time + datetime.timedelta(seconds=30))
+        })
+    ))
+
+    logs = []
+    monkeypatch.setattr(loc_jump, "jump_logger", lambda *args, **kwargs: logs.append(kwargs))
+
+    loc_jump.jump_detection("user04", "2.2.2.2")
+
+    # Should NOT be flagged due to known VPN
     assert len(logs) == 0
 
 
@@ -105,7 +152,7 @@ def test_first_login_never_flags(monkeypatch):
     logs = []
 
     monkeypatch.setattr(loc_jump, "get_coords", lambda ip: (0, 0))  # Dummy
-    monkeypatch.setattr(loc_jump, "log_event_to_json", lambda **kwargs: logs.append(kwargs))
+    monkeypatch.setattr(loc_jump, "jump_logger", lambda **kwargs: logs.append(kwargs))
 
     base_time = datetime.datetime(2025, 5, 30, 12, 0, 0)
     monkeypatch.setattr(datetime, "datetime", type("MockDateTime", (datetime.datetime,), {

@@ -54,5 +54,61 @@
         "value": 2000,
         "average": 107.6,
         "message": "Significant spike; Outside mode range (100, 1500); 1 active sessions; Outside allowed time window"
+    },
+    {
+        "timestamp": "2025-05-31T19:57:08.943305",
+        "event_type": "invalid_reading",
+        "device_id": "heater01",
+        "value": 0,
+        "average": 0,
+        "message": "Invalid power reading"
+    },
+    {
+        "timestamp": "2025-05-31T19:57:08.954565",
+        "event_type": "invalid_reading",
+        "device_id": "heater01",
+        "value": -10,
+        "average": 0,
+        "message": "Invalid power reading"
+    },
+    {
+        "timestamp": "2025-05-31T19:57:08.986054",
+        "event_type": "power_spike",
+        "device_id": "heater01",
+        "value": 2000,
+        "average": 107.6,
+        "message": "Significant spike; Outside mode range (100, 1500); 1 active sessions; Outside allowed time window"
+    },
+    {
+        "timestamp": "2025-05-31T03:57:09.028104",
+        "event_type": "power_spike",
+        "device_id": "heater01",
+        "value": 1700,
+        "average": 107.6,
+        "message": "Significant spike; 1 active sessions; Outside allowed time window"
+    },
+    {
+        "timestamp": "2025-05-31T19:57:09.068611",
+        "event_type": "power_spike",
+        "device_id": "heater01",
+        "value": 2500,
+        "average": 107.6,
+        "message": "Significant spike; Exceeds max_expected (2000); Outside mode range (1500, 2000); 1 active sessions; Outside allowed time window"
+    },
+    {
+        "timestamp": "2025-05-31T19:57:09.092002",
+        "event_type": "power_spike",
+        "device_id": "heater01",
+        "value": 1400,
+        "average": 107.6,
+        "message": "Significant spike; Outside mode range (0, 100); 1 active sessions; Outside allowed time window"
+    },
+    {
+        "timestamp": "2025-05-31T03:57:09.118543",
+        "event_type": "power_spike",
+        "device_id": "heater01",
+        "value": 2000,
+        "average": 107.6,
+        "message": "Significant spike; Outside mode range (100, 1500); 1 active sessions; Outside allowed time window"
     }
 ]

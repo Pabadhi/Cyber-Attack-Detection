@@ -6,6 +6,7 @@ import os
 class AttackDetector:
     def __init__(self, log_file='suspicious_events.json'):
         self.failed_attempts = defaultdict(list)
+        self.failed_attempts_by_ip = defaultdict(list)  # IP -> list of (timestamp, userId)
         self.log_file = log_file
         self.logged_events = []
         self._load_existing_log()
@@ -30,6 +31,8 @@ class AttackDetector:
         }
         self.logged_events.append(log_entry)
 
+    
+
     def instrument(self, event_name, user_role, user_id, source_id, timestamp, context):
         if event_name != "login_attempt":
             return False
@@ -37,7 +40,7 @@ class AttackDetector:
         flagged = False
         reason = ""
 
-        # Case 1: Too many failed login attempts
+        # Case 1: Too many failed login attempts by user
         if not context.get("success", True):
             self.failed_attempts[user_id].append(timestamp)
             self.failed_attempts[user_id] = [
@@ -47,9 +50,20 @@ class AttackDetector:
                 flagged = True
                 reason = "Brute force detected"
 
+            # Case 3: Username enumeration from same IP (3+ different users in 5 minutes)
+            self.failed_attempts_by_ip[source_id].append((timestamp, user_id))
+            self.failed_attempts_by_ip[source_id] = [
+                (t, u) for (t, u) in self.failed_attempts_by_ip[source_id]
+                if timestamp - t <= timedelta(minutes=5)
+            ]
+            unique_users = {u for (t, u) in self.failed_attempts_by_ip[source_id]}
+            if len(unique_users) >= 3:
+                flagged = True
+                reason = "Multiple accounts targeted from same IP"
+
         # Case 2: Login at suspicious hours
         hour = timestamp.hour
-        if user_role == "USER" and (hour < 5 or hour >= 24):
+        if hour < 5 or hour >= 24:
             flagged = True
             reason = "Login at suspicious time"
 
@@ -57,6 +71,7 @@ class AttackDetector:
             self._log_event(reason, event_name, user_role, user_id, source_id, timestamp, context)
 
         return flagged
+
 
     def save_logs(self):
         with open(self.log_file, 'w') as f:

@@ -9,6 +9,6 @@ MODE_POWER_RANGES = {
     "heater01": {
         "idle": (0, 100),
         "normal": (100, 1500),
-        "boost": (1500, 2200)
+        "boost": (1500, 2000)
     }
 }

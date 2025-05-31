@@ -1,0 +1,82 @@
+[
+    {
+        "timestamp": "2025-05-30T21:41:40.893494",
+        "event_type": "invalid_reading",
+        "device_id": "heater01",
+        "value": 0,
+        "average": 0,
+        "message": "Invalid power reading"
+    },
+    {
+        "timestamp": "2025-05-30T21:41:40.899094",
+        "event_type": "invalid_reading",
+        "device_id": "heater01",
+        "value": -10,
+        "average": 0,
+        "message": "Invalid power reading"
+    },
+    {
+        "timestamp": "2025-05-30T21:41:40.917605",
+        "event_type": "power_spike",
+        "device_id": "heater01",
+        "value": 2000,
+        "average": 107.6,
+        "message": "Significant spike; Outside mode range (100, 1500); 1 active sessions"
+    },
+    {
+        "timestamp": "2025-05-30T21:41:40.944931",
+        "event_type": "power_spike",
+        "device_id": "heater01",
+        "value": 2500,
+        "average": 107.6,
+        "message": "Significant spike; Exceeds max_expected (2000); Outside mode range (1500, 2200); 1 active sessions"
+    },
+    {
+        "timestamp": "2025-05-30T21:41:40.961510",
+        "event_type": "power_spike",
+        "device_id": "heater01",
+        "value": 1400,
+        "average": 107.6,
+        "message": "Significant spike; Outside mode range (0, 100); 1 active sessions"
+    },
+    {
+        "timestamp": "2025-05-30T03:41:40.980874",
+        "event_type": "power_spike",
+        "device_id": "heater01",
+        "value": 2000,
+        "average": 107.6,
+        "message": "Significant spike; Outside mode range (100, 1500); 1 active sessions"
+    },
+    {
+        "timestamp": "2025-05-30T06:41:40.999016",
+        "event_type": "power_spike",
+        "device_id": "heater01",
+        "value": 2000,
+        "average": 107.6,
+        "message": "Significant spike; Outside mode range (100, 1500); 1 active sessions"
+    },
+    {
+        "timestamp": "2025-05-30T22:35:22.412125",
+        "event_type": "location_jump",
+        "device_id": "N/A",
+        "value": "N/A",
+        "average": "N/A",
+        "message": "User 'user01' logged in from two distant locations 1.1.1.1 \u2192 2.2.2.2 (4139.1 km apart) in 30.0s"
+    },
+    {
+        "timestamp": "2025-05-30T22:39:33.582523",
+        "event_type": "location_jump",
+        "device_id": "N/A",
+        "value": "N/A",
+        "average": "N/A",
+        "message": "User 'user01' logged in from two distant locations 1.1.1.1 \u2192 2.2.2.2 (4139.1 km apart) in 30.0s"
+    },
+    {
+        "timestamp": "2025-05-30T22:40:42.591177",
+        "event_type": "location_jump",
+        "device_id": "N/A",
+        "value": "N/A",
+        "average": "N/A",
+        "message": "User 'user01' logged in from two distant locations 1.1.1.1 \u2192 2.2.2.2 (4139.1 km apart) in 30.0s"
+    }
+]

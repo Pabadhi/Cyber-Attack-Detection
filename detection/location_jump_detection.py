@@ -9,7 +9,7 @@ last_login_map = {}
 
 # Max time (in seconds) allowed between IP changes before flagging
 
-GEOIP_DB_PATH = 'C:\\Users\\hpace\\OneDrive\\Documents\\Sem8\\cyber\\Milestone4\\Cyber-Attack-Detection\\GeoLite2-City.mmdb'
+GEOIP_DB_PATH = 'GeoLite2-City.mmdb'
 reader = geoip2.database.Reader(GEOIP_DB_PATH)
 
 GEO_DISTANCE_THRESHOLD_KM = 100  # example: 100km

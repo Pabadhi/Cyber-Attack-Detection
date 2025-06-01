@@ -42,6 +42,8 @@ def handle_power_reading(device_id, value, user_role="USER"):
             if exceeds_max: reasons.append(f"Exceeds max_expected ({max_expected})")
             if outside_mode_range: reasons.append(f"Outside mode range {expected_range}")
             if sessions <= 2: reasons.append(f"{sessions} active sessions")
+            if not time_allowed:
+                reasons.append("Outside allowed time window")
             log_event_to_json("power_spike", device_id, value, avg, "; ".join(reasons))
 
     history.append(value)

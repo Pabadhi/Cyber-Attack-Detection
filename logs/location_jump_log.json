@@ -1,0 +1,1 @@
+{"timestamp": "2025-05-31T20:12:17.412649", "event_type": "location_jump", "user_id": "user01", "previous_ip": "1.1.1.1", "current_ip": "2.2.2.2", "distance_km": 4139.15, "time_difference_seconds": 30.0, "message": "User 'user01' logged in from two distant locations: 1.1.1.1 \u2192 2.2.2.2, 4139.15 km apart in 30.0s"}

@@ -1,9 +1,17 @@
 import pytest
 import datetime
 from collections import deque
-from detection.power_detection import handle_power_reading, power_history, active_sessions, device_modes, MAX_HISTORY
+from unittest.mock import patch
+from detection.logger import log_event_to_json as real_log_event_to_json
+from detection.power_detection import (
+    handle_power_reading,
+    power_history,
+    active_sessions,
+    device_modes,
+    MAX_HISTORY,
+)
 
-# Monkey-patch datetime to simulate time
+# ---- Simulate time context ----
 class MockDateTime(datetime.datetime):
     forced_hour = None
 
@@ -14,53 +22,110 @@ class MockDateTime(datetime.datetime):
             return now.replace(hour=cls.forced_hour)
         return now
 
-# Inject the mock
-datetime.datetime = MockDateTime
+datetime.datetime = MockDateTime  # Apply patch globally
 
-@pytest.mark.parametrize("desc,value,sessions,role,mode,force_time", [
-    ("Normal reading in range", 110, 2, "USER", "normal", None),
-    ("Zero reading", 0, 1, "USER", "normal", None),
-    ("Negative reading", -10, 1, "USER", "normal", None),
-    ("Spike with low sessions and not admin", 2000, 1, "USER", "normal", None),
-    ("Spike with high sessions", 2000, 5, "USER", "boost", None),
-    ("Spike by ADMIN", 2000, 1, "ADMIN", "normal", None),
-    ("Above max_expected", 2500, 1, "USER", "boost", None),
-    ("Outside mode range", 1400, 1, "USER", "idle", None),
-    ("Spike outside allowed time", 2000, 1, "USER", "normal", 3),
-    ("Spike inside allowed time", 2000, 1, "USER", "normal", 6)
+# ---- Reset context before and after each test ----
+@pytest.fixture(autouse=True)
+def reset_context():
+    power_history.clear()
+    active_sessions.clear()
+    device_modes.clear()
+    MockDateTime.forced_hour = None
+    yield
+    power_history.clear()
+    active_sessions.clear()
+    device_modes.clear()
+
+# ---- Shared sample history ----
+def setup_sample_history(device_id="heater01", values=None):
+    if values is None:
+        values = [100, 105, 110, 108, 115]
+    power_history[device_id] = deque(values, maxlen=MAX_HISTORY)
+
+# ---- Parameterized detection tests ----
+
+@pytest.mark.parametrize("desc,value,sessions,role,mode,force_time,should_flag,event_type", [
+    # Normal behavior - should NOT be flagged
+    ("Normal reading in range", 110, 2, "USER", "normal", None, False, None),
+
+    # Invalid reading: zero
+    ("Zero reading", 0, 1, "USER", "normal", None, True, "invalid_reading"),
+
+    # Invalid reading: negative
+    ("Negative reading", -10, 1, "USER", "normal", None, True, "invalid_reading"),
+
+    # Power spike with low sessions and normal user
+    ("Spike with low sessions and not admin", 2000, 1, "USER", "normal", None, True, "power_spike"),
+
+    # Power spike with high session count – should NOT be flagged
+    ("Spike with high sessions", 2000, 5, "USER", "boost", None, False, None),
+
+    # Power spike by ADMIN – should NOT be flagged
+    ("Spike by ADMIN", 2000, 1, "ADMIN", "normal", None, False, None),
+    
+    # Spike within mode range but suspicious context
+    ("Spike inside mode range but outside time, low sessions", 1700, 1, "USER", "boost", 3, True, "power_spike"),
+    
+    # Spike inside mode range, allowed time — normal
+    ("Spike inside mode range during allowed time", 1700, 1, "USER", "boost", 8, False, None),
+    
+    # Spike inside mode range, enough sessions — normal
+    ("Spike inside mode range with high sessions", 1700, 5, "USER", "boost", 3, False, None),
+
+    # Above max_expected
+    ("Above max_expected", 2500, 1, "USER", "boost", None, True, "power_spike"),
+
+    # Outside mode range
+    ("Outside mode range", 1400, 1, "USER", "idle", None, True, "power_spike"),
+
+    # Spike outside allowed time – should be flagged
+    ("Spike outside allowed time", 2000, 1, "USER", "normal", 3, True, "power_spike"),
+
+    # Spike inside allowed time – should NOT be flagged
+    ("Spike inside allowed time", 2000, 1, "USER", "normal", 6, False, None),
 ])
 
 
-def test_handle_power_reading(desc, value, sessions, role, mode, force_time):
-    # Setup context
-    sample_baseline = [100, 105, 110, 108, 115]
-    power_history["heater01"] = deque(sample_baseline, maxlen=MAX_HISTORY)
+@patch("detection.power_detection.log_event_to_json")
+def test_power_detection_cases(mock_log, desc, value, sessions, role, mode, force_time, should_flag, event_type):
+    """
+    Generalized test that runs all intrusion and non-intrusion cases for power anomaly detection.
+    It uses a mock to verify behavior AND logs the real data for screenshots.
+    """
+    # Setup mock to ALSO log to real file
+    mock_log.side_effect = real_log_event_to_json
 
+    device_id = "heater01"
+    setup_sample_history(device_id)
+    active_sessions[device_id] = sessions
+    device_modes[device_id] = mode
     MockDateTime.forced_hour = force_time
-    active_sessions["heater01"] = sessions
-    device_modes["heater01"] = mode
 
-    # Call the function (test passes if no exception is raised)
-    handle_power_reading("heater01", value, user_role=role)
+    # Run the function under test
+    handle_power_reading(device_id, value, user_role=role)
 
-    # Optionally, you can assert log file contents or power_history if needed
+    # Assertions based on expected behavior
+    if should_flag:
+        assert mock_log.called, f"{desc} should have triggered a log"
+        assert mock_log.call_args[0][0] == event_type, f"{desc} should log event type {event_type}"
+    else:
+        mock_log.assert_not_called(), f"{desc} should not have triggered any log"
 
-@pytest.fixture(autouse=True)
-def clear_power_history():
-    power_history.clear()
-    yield
-    power_history.clear()
+# ---- Additional test: Initialization of power history ----
 
-def test_history_initialization():
+def test_history_initialization_for_new_device():
+    """
+    Tests that a new device ID initializes its power history correctly.
+    """
     device_id = "new_device"
     value = 150
     user_role = "USER"
-    
-    # Ensure it's not already in history
+
     if device_id in power_history:
         del power_history[device_id]
-    
+
     handle_power_reading(device_id, value, user_role)
-    
+
     assert device_id in power_history
     assert value in power_history[device_id]
+

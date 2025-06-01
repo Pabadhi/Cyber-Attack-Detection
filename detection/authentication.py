@@ -30,6 +30,7 @@ class AttackDetector:
             "flagged": True
         }
         self.logged_events.append(log_entry)
+        self.save_logs()
 
     
 

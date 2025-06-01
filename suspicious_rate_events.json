@@ -1,0 +1,23 @@
+[
+    {
+        "timestamp": "2025-06-01T03:44:03.381751",
+        "event_type": "control_command",
+        "device_id": "deviceY",
+        "value": "5",
+        "message": "Device deviceY exceeded control commands in 30 seconds. User role: guest is not allowed to send more than 5 control commands in a 30s."
+    },
+    {
+        "timestamp": "2025-06-01T03:44:03.385763",
+        "event_type": "failed_login",
+        "device_id": "deviceX",
+        "value": "10",
+        "message": "User admin_user exceeded login attempts in 60 seconds from device deviceX. User role: admin is not allowed to login more than 10 times in a minute."
+    },
+    {
+        "timestamp": "2025-06-01T03:44:03.393758",
+        "event_type": "control_command",
+        "device_id": "deviceA",
+        "value": "10",
+        "message": "Device deviceA exceeded control commands in 30 seconds. User role: admin is not allowed to send more than 10 control commands in a 30s."
+    }
+]

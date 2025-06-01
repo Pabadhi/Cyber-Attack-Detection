@@ -23,7 +23,8 @@ _history = {}             # device_id → deque[timestamps]
 
 
 def _now():
-    return dt.datetime.utcnow().replace(tzinfo=dt.timezone.utc)
+    # return dt.datetime.utcnow().replace(tzinfo=dt.timezone.utc)
+    return dt.datetime.now(dt.timezone.utc)
 
 
 def track(device_id: str, user_id: str = "unknown") -> None:
